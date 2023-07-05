@@ -1,12 +1,12 @@
 import os
 import pickle
 import concurrent.futures
-from fixed_config import ids, types, trials
+from fixed_config import ids, trials
 
 
 class PklLoader:
-    def __init__(self, data_path="../data/pkl", swing_neigh=False):
-        self.data_path = data_path
+    def __init__(self, dset_path="../data/pkl", swing_neigh=True):
+        self.dset_path = dset_path
         self.neigh_order = ["tag", "raw", "n1", "n2", "n3"]
         if swing_neigh:
             self.neigh_order += ["swing_neigh_r1", "swing_neigh_r2", "swing_neigh_r3"]
@@ -27,13 +27,13 @@ class PklLoader:
 
     def _load_all_data(self):
         for id_ in ids:
-            for type_ in types:
+            for type_ in self.neigh_order:
                 for trial in trials:
                     self._load_data(id_, type_, trial)
 
     def _load_data(self, id_, type_, trial):
-        if os.path.exists(f"{self.data_path}/{id_}/{type_}/{trial}.pkl"):
-            with open(f"{self.data_path}/{id_}/{type_}/{trial}.pkl", "rb") as f:
+        if os.path.exists(f"{self.dset_path}/{id_}/{type_}/{trial}.pkl"):
+            with open(f"{self.dset_path}/{id_}/{type_}/{trial}.pkl", "rb") as f:
                 data = pickle.load(f)
 
             # Store the data in all dictionaries
